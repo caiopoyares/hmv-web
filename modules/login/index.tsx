@@ -11,23 +11,30 @@ import React from "react";
 import NextLink from "next/link";
 import Image from "next/image";
 import Logo from "../../public/logo.png";
-import { useRouter } from "next/router";
 
-export const Home = () => {
-  const router = useRouter();
-
+export const Login = () => {
   return (
     <Container marginTop={10} maxW={600} centerContent>
       <Box maxW={400}>
         <Image src={Logo} alt="Hospital Moinho dos ventos" />
       </Box>
-      <VStack paddingY={24} spacing={-1}>
+      <VStack paddingY={4} spacing={-1}>
         <Text fontWeight="bold" fontSize={26}>
-          Redefinindo o impossível
+          Cadastro
         </Text>
-        <Text fontSize={18}>Juntos, movemos essa história</Text>
       </VStack>
-      <Flex>
+      <VStack width="100%">
+        <Button
+          colorScheme="color"
+          color="white"
+          bgColor="brand.700"
+          isFullWidth
+          maxW={400}
+        >
+          Cadastre-se
+        </Button>
+      </VStack>
+      <Flex marginTop={6}>
         <Text>Já possui uma conta?</Text>
         <NextLink href="/login" passHref>
           <Link
@@ -40,18 +47,6 @@ export const Home = () => {
           </Link>
         </NextLink>
       </Flex>
-      <VStack width="100%" marginTop={6}>
-        <Button
-          colorScheme="color"
-          color="white"
-          bgColor="brand.700"
-          isFullWidth
-          maxW={400}
-          onClick={() => router.push("/sign-up")}
-        >
-          Cadastre-se
-        </Button>
-      </VStack>
     </Container>
   );
 };
