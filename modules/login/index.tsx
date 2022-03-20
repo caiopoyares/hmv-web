@@ -6,44 +6,83 @@ import {
   Flex,
   Button,
   Box,
+  Input,
 } from "@chakra-ui/react";
 import React from "react";
 import NextLink from "next/link";
 import Image from "next/image";
 import Logo from "../../public/logo.png";
+import { useForm } from "react-hook-form";
+import { PasswordInput } from "../../components/form/passwordInput";
+import styled from "@emotion/styled";
+import { useLogin } from "./hook";
+
+const ErrorMessage = styled(Text)`
+  font-size: 0.8rem;
+  color: red;
+  margin-top: 0;
+`;
 
 export const Login = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
+  const { mutate, isLoading, error: loginError } = useLogin();
+
+  const onSubmit = (data: any) => {
+    const payload = {
+      cpf: data.cpf.replace(/\D/g, ""),
+      password: data.password,
+    };
+
+    mutate(payload);
+  };
+
   return (
-    <Container marginTop={10} maxW={600} centerContent>
+    <Container marginTop={10} maxW={400} centerContent>
       <Box maxW={400}>
         <Image src={Logo} alt="Hospital Moinho dos ventos" />
       </Box>
-      <VStack paddingY={4} spacing={-1}>
-        <Text fontWeight="bold" fontSize={26}>
-          Cadastro
-        </Text>
+      <VStack width="100%" marginTop={8}>
+        <form onSubmit={handleSubmit(onSubmit)} style={{ width: "100% " }}>
+          <VStack spacing={3} marginBottom={4}>
+            <Input placeholder="CPF" {...register("cpf", { required: true })} />
+            {errors.cpf && <ErrorMessage>Campo obrigatório</ErrorMessage>}
+            <PasswordInput
+              register={register}
+              isRequired
+              placeholder={"Senha"}
+            />
+            {errors.password && <ErrorMessage>Campo obrigatório</ErrorMessage>}
+            <Button
+              cursor="pointer"
+              bgColor="brand.700"
+              color="white"
+              type="submit"
+              isFullWidth
+              isLoading={isLoading}
+              disabled={isLoading}
+            >
+              Acessar conta
+            </Button>
+            {loginError && (
+              <ErrorMessage>Erro ao fazer login. Tente novamente</ErrorMessage>
+            )}
+          </VStack>
+        </form>
       </VStack>
-      <VStack width="100%">
-        <Button
-          colorScheme="color"
-          color="white"
-          bgColor="brand.700"
-          isFullWidth
-          maxW={400}
-        >
-          Cadastre-se
-        </Button>
-      </VStack>
-      <Flex marginTop={6}>
-        <Text>Já possui uma conta?</Text>
-        <NextLink href="/login" passHref>
+      <Flex marginTop={0}>
+        <NextLink href="/" passHref>
           <Link
             color="brand.700"
             fontWeight="bold"
             textDecoration="underline"
             marginLeft={1}
           >
-            Entre aqui
+            Voltar ao início
           </Link>
         </NextLink>
       </Flex>

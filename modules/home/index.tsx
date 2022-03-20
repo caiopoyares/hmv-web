@@ -17,39 +17,26 @@ export const Home = () => {
   const router = useRouter();
 
   return (
-    <Container marginTop={10} maxW={600} centerContent>
+    <Container marginTop={10} maxW={400} centerContent>
       <Box maxW={400}>
         <Image src={Logo} alt="Hospital Moinho dos ventos" />
       </Box>
-      <VStack paddingY={24} spacing={-1}>
+      <VStack paddingY={12} spacing={-1}>
         <Text fontWeight="bold" fontSize={26}>
           Redefinindo o impossível
         </Text>
         <Text fontSize={18}>Juntos, movemos essa história</Text>
       </VStack>
-      <Flex>
-        <Text>Já possui uma conta?</Text>
-        <NextLink href="/login" passHref>
-          <Link
-            color="brand.700"
-            fontWeight="bold"
-            textDecoration="underline"
-            marginLeft={1}
-          >
-            Entre aqui
-          </Link>
-        </NextLink>
-      </Flex>
-      <VStack width="100%" marginTop={6}>
+      <VStack width="100%" marginTop={2}>
         <Button
           colorScheme="color"
           color="white"
           bgColor="brand.700"
           isFullWidth
           maxW={400}
-          onClick={() => router.push("/sign-up")}
+          onClick={() => router.push("/login")}
         >
-          Cadastre-se
+          Entre aqui
         </Button>
       </VStack>
     </Container>

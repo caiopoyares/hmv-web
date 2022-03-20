@@ -23,9 +23,9 @@ export const PasswordInput: FC<Props> = ({
         placeholder={placeholder}
         {...register("password", { required: isRequired })}
       />
-      <InputRightElement width="4.5rem">
+      <InputRightElement width="5.5rem">
         <Button h="1.75rem" size="sm" onClick={handleClick}>
-          {show ? "Hide" : "Show"}
+          {show ? "Desver" : "Ver"}
         </Button>
       </InputRightElement>
     </InputGroup>
