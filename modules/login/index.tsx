@@ -7,8 +7,9 @@ import {
   Button,
   Box,
   Input,
+  useToast,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useEffect } from "react";
 import NextLink from "next/link";
 import Image from "next/image";
 import Logo from "../../public/logo.png";
@@ -29,6 +30,7 @@ export const Login = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
+  const toast = useToast();
 
   const { mutate, isLoading, error: loginError } = useLogin();
 
@@ -40,6 +42,18 @@ export const Login = () => {
 
     mutate(payload);
   };
+
+  useEffect(() => {
+    if (loginError) {
+      toast({
+        title: "Erro ao fazer login",
+        description: "Verifique suas credenciais e tente novamente.",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  }, [loginError, toast]);
 
   return (
     <Container marginTop={10} maxW={400} centerContent>
@@ -70,9 +84,6 @@ export const Login = () => {
             >
               Acessar conta
             </Button>
-            {loginError && (
-              <ErrorMessage>Erro ao fazer login. Tente novamente</ErrorMessage>
-            )}
           </VStack>
         </form>
       </VStack>

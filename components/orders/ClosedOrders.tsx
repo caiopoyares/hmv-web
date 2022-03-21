@@ -7,12 +7,19 @@ import {
   Tag,
   Text,
 } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 
 interface Props {
   orders: any[];
 }
 
 export const ClosedOrders = ({ orders }: Props) => {
+  const router = useRouter();
+
+  const onOrderClick = (orderId: string) => {
+    router.push(`/orders/${orderId}/closed`);
+  };
+
   return (
     <Box display="flex" flexDir={["column", "row"]} mt={4}>
       {orders.map((order: any) => (
@@ -26,9 +33,11 @@ export const ClosedOrders = ({ orders }: Props) => {
           w={["100%", 300]}
           marginRight={[0, 2]}
           marginBottom={[4, 0]}
+          onClick={() => onOrderClick(order.id)}
+          cursor="pointer"
         >
           <Heading size="md">
-            <LinkOverlay href="#">{order.nome}</LinkOverlay>
+            <LinkOverlay>{order.nome}</LinkOverlay>
           </Heading>
           <Text mb={4}>ID do paciente: {order.pacienteId}</Text>
           <Text textTransform="uppercase" fontWeight="bold">

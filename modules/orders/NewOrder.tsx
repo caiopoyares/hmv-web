@@ -5,7 +5,10 @@ import {
   Container,
   Heading,
   Input,
+  Radio,
+  RadioGroup,
   Select,
+  Stack,
   Text,
   Textarea,
   useToast,
@@ -33,16 +36,16 @@ export const NewOrder = () => {
   const onSubmit = (data: any) => {
     console.log(data);
     toast({
-      title: "Ficha criada com sucesso",
+      title: "Ficha criada com sucesso!",
       description: "Nova ficha de emergência criada com sucesso.",
       status: "success",
-      duration: 6000,
+      duration: 5000,
     });
     router.push("/dashboard");
   };
 
   return (
-    <Container maxW={1200} mt={[8, 12]}>
+    <Container maxW={1200} mt={[8, 12]} mb={4}>
       <Heading as="h4" size="lg">
         Nova ficha de emergência
       </Heading>
@@ -81,6 +84,14 @@ export const NewOrder = () => {
               Informações da emergência
             </Heading>
             <VStack spacing={3} mt={2}>
+              <Select
+                {...register("unit", { required: true })}
+                placeholder="Selecione a unidade"
+                isInvalid={errors.unit}
+              >
+                <option value="iguatemi">Iguatemi</option>
+                <option value="canoas">Canoas</option>
+              </Select>
               <Input
                 placeholder="Data de entrada"
                 {...register("arrivalDate", { required: true })}
