@@ -1,12 +1,4 @@
-import {
-  Container,
-  Link,
-  VStack,
-  Text,
-  Flex,
-  Button,
-  Box,
-} from "@chakra-ui/react";
+import { Container, VStack, Text, Button, Box } from "@chakra-ui/react";
 import React from "react";
 import Image from "next/image";
 import Logo from "../../public/logo.png";

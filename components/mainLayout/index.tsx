@@ -22,17 +22,26 @@ export const MainLayout: FC = ({ children }) => {
     <div>
       <Menu p="0.25rem" paddingX={["0.5rem", "1rem"]}>
         <Flex alignItems="center">
-          <Image
-            src={HmvLogo}
-            alt="Hospital Moinho dos ventos"
-            width={50}
-            height={50}
-          />
-          <Text marginLeft={0} fontWeight="bold">
-            HMV
-          </Text>
+          <Box
+            display="flex"
+            alignItems="center"
+            onClick={() => router.push("/dashboard")}
+            cursor="pointer"
+          >
+            <Image
+              src={HmvLogo}
+              alt="Hospital Moinho dos ventos"
+              width={50}
+              height={50}
+            />
+            <Text cursor="pointer" marginLeft={0} fontWeight="bold">
+              HMV
+            </Text>
+          </Box>
           <Box p={4} marginLeft="auto" cursor="pointer" onClick={onLogout}>
-            <Text>Sair</Text>
+            <Text fontSize="14" textTransform="uppercase">
+              Sair
+            </Text>
           </Box>
         </Flex>
       </Menu>

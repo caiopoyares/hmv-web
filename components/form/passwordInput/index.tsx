@@ -5,11 +5,13 @@ interface Props {
   register: any;
   isRequired: boolean;
   placeholder: string;
+  isInvalid: boolean;
 }
 
 export const PasswordInput: FC<Props> = ({
   register,
   isRequired,
+  isInvalid,
   placeholder,
 }) => {
   const [show, setShow] = React.useState(false);
@@ -22,6 +24,7 @@ export const PasswordInput: FC<Props> = ({
         type={show ? "text" : "password"}
         placeholder={placeholder}
         {...register("password", { required: isRequired })}
+        isInvalid={isInvalid}
       />
       <InputRightElement width="5.5rem">
         <Button h="1.75rem" size="sm" onClick={handleClick}>

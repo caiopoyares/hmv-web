@@ -49,18 +49,20 @@ export const Login = () => {
       <VStack width="100%" marginTop={8}>
         <form onSubmit={handleSubmit(onSubmit)} style={{ width: "100% " }}>
           <VStack spacing={3} marginBottom={4}>
-            <Input placeholder="CPF" {...register("cpf", { required: true })} />
-            {errors.cpf && <ErrorMessage>Campo obrigatório</ErrorMessage>}
+            <Input
+              placeholder="CPF"
+              {...register("cpf", { required: true })}
+              isInvalid={errors.cpf}
+            />
             <PasswordInput
               register={register}
               isRequired
               placeholder={"Senha"}
+              isInvalid={errors.password}
             />
-            {errors.password && <ErrorMessage>Campo obrigatório</ErrorMessage>}
             <Button
               cursor="pointer"
-              bgColor="brand.700"
-              color="white"
+              colorScheme="blue"
               type="submit"
               isFullWidth
               isLoading={isLoading}

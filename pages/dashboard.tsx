@@ -14,7 +14,7 @@ const DashboardPage = () => {
   return (
     <MainLayout>
       <Head>
-        <title>Dashboard - HMV</title>
+        <title>Painel - HMV</title>
         <meta name="description" content="Dashboard HMV" />
       </Head>
       <Dashboard />
