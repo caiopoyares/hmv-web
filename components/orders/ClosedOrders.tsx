@@ -1,6 +1,7 @@
 import {
   Box,
   Heading,
+  HStack,
   LinkBox,
   LinkOverlay,
   Tag,
@@ -21,13 +22,13 @@ export const ClosedOrders = ({ orders: allOrders }: Props) => {
   };
 
   return (
-    <Box display="flex" flexDir={["column", "row"]} mt={4}>
+    <Box display="flex" flexDir={["column", "row"]} mt={2}>
       {closedOrders.length < 1 ? (
-        <div>
+        <>
           <Text color="gray.500">Nenhuma ficha encerrada.</Text>
-        </div>
+        </>
       ) : (
-        <div>
+        <>
           {closedOrders.map((order: any) => (
             <LinkBox
               key={order.id}
@@ -39,6 +40,7 @@ export const ClosedOrders = ({ orders: allOrders }: Props) => {
               w={["100%", 300]}
               marginRight={[0, 2]}
               marginBottom={[4, 0]}
+              marginTop={2}
               onClick={() => onOrderClick(order.id)}
               cursor="pointer"
             >
@@ -49,24 +51,36 @@ export const ClosedOrders = ({ orders: allOrders }: Props) => {
               <Text mb={4} color="gray.500">
                 CPF do paciente: {order.user.cpf}
               </Text>
-
               <Text mt={4} fontWeight="bold">
                 Ficha nº {order.id}
               </Text>
+              <Text color="gray.500">Criado em {order.arrivalDate}</Text>
               <Text mb={4} color="gray.500">
-                Criado em {order.arrivalDate}
+                Hospital: {order.hospital.name}
               </Text>
-              <Tag
-                size="md"
-                variant="solid"
-                bgColor="teal"
-                textTransform="uppercase"
-              >
-                {order.reason}
-              </Tag>
+              <HStack>
+                <Tag
+                  size="md"
+                  variant="solid"
+                  bgColor="teal"
+                  textTransform="uppercase"
+                  fontSize="12"
+                >
+                  {order.reason}
+                </Tag>
+                <Tag
+                  size="md"
+                  variant="solid"
+                  bgColor="brown"
+                  textTransform="uppercase"
+                  fontSize="12"
+                >
+                  Encerrada
+                </Tag>
+              </HStack>
             </LinkBox>
           ))}
-        </div>
+        </>
       )}
     </Box>
   );

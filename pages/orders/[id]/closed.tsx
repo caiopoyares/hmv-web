@@ -4,6 +4,7 @@ import React from "react";
 import { MainLayout } from "../../../components/mainLayout";
 import { isBrowser } from "../../../helpers";
 import { isAuthenticated } from "../../../helpers/auth";
+import { ClosedOrder } from "../../../modules/orders/ClosedOrder";
 
 const ClosedOrderPage = () => {
   const router = useRouter();
@@ -16,8 +17,7 @@ const ClosedOrderPage = () => {
         <title>Finalizar ficha de emergência - HMV</title>
         <meta name="description" content="Nova ficha - HMV" />
       </Head>
-      closed
-      {/* <NewOrder /> */}
+      <ClosedOrder orderId={router.query.id as string} />
     </MainLayout>
   );
 };

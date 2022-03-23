@@ -14,10 +14,8 @@ export const Dashboard = () => {
 
   if (status === "error") return <div>something went wrong</div>;
 
-  console.log(orders);
-
   return (
-    <Container maxW={1200} mt={[4, 8]}>
+    <Container maxW={1200} mt={[4, 8]} mb={8}>
       <Box>
         <Button
           colorScheme="blue"

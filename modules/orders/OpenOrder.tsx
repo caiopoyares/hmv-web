@@ -1,4 +1,4 @@
-import { ArrowBackIcon, WarningIcon } from "@chakra-ui/icons";
+import { ArrowBackIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
@@ -6,26 +6,21 @@ import {
   Container,
   Heading,
   Input,
-  Modal,
   Textarea,
   useToast,
   Text,
   VStack,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
-  Alert,
   Spinner,
+  Tag,
+  Select,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import React, { FC, useState } from "react";
+import React, { FC, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useQuery } from "react-query";
 import api from "../../core/api";
 import { getAuthToken } from "../../helpers/auth";
+import { useDoctors, useFinishEmergencyOrder } from "./hook";
 
 interface Props {
   orderId: string;
@@ -50,55 +45,59 @@ const useEmergencyOrder = (orderId: string) => {
 
 export const OpenOrder: FC<Props> = ({ orderId }) => {
   const router = useRouter();
-  const [showModal, setShowModal] = useState(false);
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
   const toast = useToast();
-
   const { data: order, status } = useEmergencyOrder(router.query.id as string);
+  const { data: doctors } = useDoctors();
+
+  const { mutate, isLoading, isSuccess, isError } =
+    useFinishEmergencyOrder(orderId);
 
   const onSubmit = (data: any) => {
-    console.log(data);
+    mutate(data);
+  };
 
-    if (data.shouldCreateUser) {
-      return setShowModal(true);
+  useEffect(() => {
+    if (isSuccess) {
+      toast({
+        title: "Ficha finalizada com sucesso!",
+        description: "Ficha de emergência finalizada com sucesso.",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
+      router.push("/dashboard");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSuccess]);
 
-    toast({
-      title: "Ficha finalizada com sucesso!",
-      description: "Ficha de emergência finalizada com sucesso.",
-      status: "success",
-      duration: 5000,
-      isClosable: true,
-    });
-    router.push("/dashboard");
-  };
-
-  const onContinue = () => {
-    toast({
-      title: "Ficha finalizada com sucesso!",
-      description: "Ficha de emergência finalizada com sucesso.",
-      status: "success",
-      duration: 5000,
-      isClosable: true,
-    });
-    router.push("/dashboard");
-  };
+  useEffect(() => {
+    if (isError) {
+      toast({
+        title: "Erro ao finalizar a ficha!",
+        description: "Revise seus dados e tente novamente.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isError]);
 
   if (status === "loading") return <Spinner />;
   if (status === "error") return <div>something went wrong</div>;
-
-  console.log(order);
+  if (!doctors || !order) return null;
 
   return (
     <Container maxW={1200} mt={8} mb={4}>
       <Button
         leftIcon={<ArrowBackIcon />}
         mb={4}
-        onClick={() => router.back()}
+        onClick={() => router.push("/dashboard")}
         variant="outline"
         colorScheme="orange"
       >
@@ -114,6 +113,18 @@ export const OpenOrder: FC<Props> = ({ orderId }) => {
         <Heading as="h4" size="md" mb={2}>
           Detalhes da ficha de emergência
         </Heading>
+        <Box display="flex">
+          <Text mr={2}>Status:</Text>
+          <Tag
+            size="md"
+            variant="solid"
+            bgColor="orange.400"
+            textTransform="uppercase"
+            fontSize="12"
+          >
+            Em aberto
+          </Tag>
+        </Box>
         <Box display="flex">
           <Text mr={2}>Nome do paciente:</Text>
           <Text color="gray.500">
@@ -131,10 +142,6 @@ export const OpenOrder: FC<Props> = ({ orderId }) => {
         <Box display="flex">
           <Text mr={2}>Motivo da emergência:</Text>
           <Text color="gray.500">{order.reason}</Text>
-        </Box>
-        <Box display="flex">
-          <Text mr={2}>Detalhes da emergência:</Text>
-          <Text color="gray.500">{order.description}</Text>
         </Box>
         <Box display="flex">
           <Text mr={2}>Hospital de entrada:</Text>
@@ -161,15 +168,23 @@ export const OpenOrder: FC<Props> = ({ orderId }) => {
             isInvalid={errors.finishTime}
           />
           <Input
-            placeholder="Prazo recomendado para retorno"
-            {...register("returnAfter", { required: true })}
-            isInvalid={errors.returnAfter}
+            type="number"
+            placeholder="Prazo recomendado para retorno (em semanas)"
+            {...register("weeksUntilReturn", { required: true })}
+            isInvalid={errors.weeksUntilReturn}
           />
-          <Input
-            placeholder="Médico responsável"
-            {...register("doctor", { required: true })}
-            isInvalid={errors.doctor}
-          />
+          <Select
+            {...register("doctorId", { required: true })}
+            placeholder="Selecione o médico responsável"
+            isInvalid={errors.doctorId}
+          >
+            {doctors.map((doctor: any) => (
+              <option
+                key={doctor.id}
+                value={doctor.id}
+              >{`${doctor.firstName} ${doctor.lastName} (CRM: ${doctor.crm})`}</option>
+            ))}
+          </Select>
           <Textarea
             placeholder="Sugestões ao paciente"
             {...register("suggestions", { required: true })}
@@ -192,59 +207,12 @@ export const OpenOrder: FC<Props> = ({ orderId }) => {
           type="submit"
           isFullWidth
           mt={6}
-          //   isLoading={isLoading}
-          //   disabled={isLoading}
+          isLoading={isLoading}
+          disabled={isLoading}
         >
           Finalizar ficha
         </Button>
       </form>
-      <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>
-            <Box display="flex" alignItems="center">
-              <WarningIcon mr={2} color="orange.500" />
-              <Text color="orange.500">Atenção</Text>
-            </Box>
-            <ModalCloseButton />
-          </ModalHeader>
-          <ModalBody>
-            <Text mb={2} fontWeight="bold">
-              Usuário criado com sucesso.
-            </Text>
-            <Text>
-              Antes de continuar, certifique-se de que você anotou as
-              credenciais do cliente.{" "}
-              <Text fontWeight="bold" my={4}>
-                Essas informações não serão exibidas novamente.
-              </Text>
-            </Text>
-            <Box mt={2}>
-              <Alert status="warning" borderRadius={4}>
-                <Box fontSize="14">
-                  <Box mb={3} display="flex">
-                    CPF do usuário:
-                    <Text ml={2} fontWeight="bold">
-                      420132788848
-                    </Text>
-                  </Box>
-                  <Box mb={3} display="flex">
-                    Senha do usuário:
-                    <Text ml={2} fontWeight="bold">
-                      nFfdAffdD
-                    </Text>
-                  </Box>
-                </Box>
-              </Alert>
-            </Box>
-          </ModalBody>
-          <ModalFooter>
-            <Button colorScheme="gray" mr={3} onClick={onContinue}>
-              Continuar
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
     </Container>
   );
 };

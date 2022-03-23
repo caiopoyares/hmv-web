@@ -1,29 +1,19 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Box,
   Button,
   Container,
   Heading,
   Input,
-  Radio,
-  RadioGroup,
   Select,
-  Stack,
-  Text,
   Textarea,
   useToast,
   VStack,
 } from "@chakra-ui/react";
-import styled from "@emotion/styled";
 import { useForm } from "react-hook-form";
-import Router, { useRouter } from "next/router";
+import { useRouter } from "next/router";
 import { ArrowBackIcon } from "@chakra-ui/icons";
-
-const ErrorMessage = styled(Text)`
-  font-size: 0.8rem;
-  color: red;
-  margin-top: 0;
-`;
+import { useCreateEmergencyOrder } from "./hook";
 
 export const NewOrder = () => {
   const router = useRouter();
@@ -33,16 +23,36 @@ export const NewOrder = () => {
     formState: { errors },
   } = useForm();
   const toast = useToast();
+  const { mutate, isLoading, isSuccess, isError } = useCreateEmergencyOrder();
 
-  const onSubmit = (data: any) => {
-    console.log(data);
-    toast({
-      title: "Ficha criada com sucesso!",
-      description: "Nova ficha de emergência criada com sucesso.",
-      status: "success",
-      duration: 5000,
-    });
-    router.push("/dashboard");
+  useEffect(() => {
+    if (isSuccess) {
+      toast({
+        title: "Ficha criada com sucesso!",
+        description: "Nova ficha de emergência criada com sucesso.",
+        status: "success",
+        duration: 5000,
+      });
+      router.push("/dashboard");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSuccess]);
+
+  useEffect(() => {
+    if (isError) {
+      toast({
+        title: "Erro ao criar ficha!",
+        description:
+          "Ops, algo deu errado. Por favor, revise os dados e tente novamente.",
+        status: "error",
+        duration: 5000,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isError]);
+
+  const onSubmit = async (data: any) => {
+    mutate(data);
   };
 
   return (
@@ -50,7 +60,7 @@ export const NewOrder = () => {
       <Button
         leftIcon={<ArrowBackIcon />}
         mb={4}
-        onClick={() => router.back()}
+        onClick={() => router.push("/dashboard")}
         variant="outline"
         colorScheme="orange"
       >
@@ -68,24 +78,30 @@ export const NewOrder = () => {
           </Box>
           <Input
             placeholder="Nome"
-            {...register("name", { required: true })}
-            isInvalid={errors.name}
+            {...register("patientFirstName", { required: true })}
+            isInvalid={errors.patientFirstName}
           />
           <Input
             placeholder="Sobrenome"
-            {...register("surname", { required: true })}
-            isInvalid={errors.surname}
+            {...register("patientLastName", { required: true })}
+            isInvalid={errors.patientLastName}
           />
           <Input
             placeholder="E-mail"
-            {...register("email", { required: true })}
-            isInvalid={errors.email}
+            {...register("patientEmail", { required: true })}
+            isInvalid={errors.patientEmail}
+          />
+          <Input
+            type="number"
+            placeholder="CPF"
+            {...register("patientCPF", { required: true })}
+            isInvalid={errors.patientCPF}
           />
           <Input
             type="number"
             placeholder="Idade"
-            {...register("age", { required: true })}
-            isInvalid={errors.age}
+            {...register("patientAge", { required: true })}
+            isInvalid={errors.patientAge}
           />
         </VStack>
         <Box my={6} w="100%">
@@ -95,12 +111,12 @@ export const NewOrder = () => {
             </Heading>
             <VStack spacing={3} mt={2}>
               <Select
-                {...register("unit", { required: true })}
+                {...register("hospitalId", { required: true })}
                 placeholder="Selecione a unidade"
-                isInvalid={errors.unit}
+                isInvalid={errors.hospitalId}
               >
-                <option value="iguatemi">Iguatemi</option>
-                <option value="canoas">Canoas</option>
+                <option value="1">Iguatemi</option>
+                <option value="2">Canoas</option>
               </Select>
               <Input
                 placeholder="Data de entrada"
@@ -138,8 +154,8 @@ export const NewOrder = () => {
           colorScheme="blue"
           type="submit"
           isFullWidth
-          //   isLoading={isLoading}
-          //   disabled={isLoading}
+          isLoading={isLoading}
+          disabled={isLoading}
         >
           Criar ficha
         </Button>

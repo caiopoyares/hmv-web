@@ -22,13 +22,13 @@ export const OpenOrders = ({ orders: allOrders }: Props) => {
   };
 
   return (
-    <Box display="flex" flexDir={["column", "row"]} mt={4}>
+    <Box display="flex" flexWrap="wrap" flexDir={["column", "row"]} mt={2}>
       {openOrders.length < 1 ? (
-        <div>
+        <>
           <Text color="gray.500">Nenhuma ficha em andamento.</Text>
-        </div>
+        </>
       ) : (
-        <div>
+        <>
           {openOrders.map((order: any) => (
             <LinkBox
               key={order.id}
@@ -40,6 +40,7 @@ export const OpenOrders = ({ orders: allOrders }: Props) => {
               w={["100%", 300]}
               marginRight={[0, 2]}
               marginBottom={[4, 0]}
+              marginTop={2}
               onClick={() => onOrderClick(order.id)}
               cursor="pointer"
             >
@@ -64,13 +65,15 @@ export const OpenOrders = ({ orders: allOrders }: Props) => {
                   variant="solid"
                   bgColor="teal"
                   textTransform="uppercase"
+                  fontSize="12"
                 >
                   {order.reason}
                 </Tag>
                 <Tag
                   size="md"
                   variant="solid"
-                  bgColor="orange"
+                  fontSize="12"
+                  bgColor="orange.400"
                   textTransform="uppercase"
                 >
                   Em aberto
@@ -78,7 +81,7 @@ export const OpenOrders = ({ orders: allOrders }: Props) => {
               </HStack>
             </LinkBox>
           ))}
-        </div>
+        </>
       )}
     </Box>
   );
