@@ -17,6 +17,7 @@ import {
 import styled from "@emotion/styled";
 import { useForm } from "react-hook-form";
 import Router, { useRouter } from "next/router";
+import { ArrowBackIcon } from "@chakra-ui/icons";
 
 const ErrorMessage = styled(Text)`
   font-size: 0.8rem;
@@ -45,7 +46,16 @@ export const NewOrder = () => {
   };
 
   return (
-    <Container maxW={1200} mt={[8, 12]} mb={4}>
+    <Container maxW={1200} mt={8} mb={4}>
+      <Button
+        leftIcon={<ArrowBackIcon />}
+        mb={4}
+        onClick={() => router.back()}
+        variant="outline"
+        colorScheme="orange"
+      >
+        Voltar
+      </Button>
       <Heading as="h4" size="lg">
         Nova ficha de emergência
       </Heading>
@@ -67,15 +77,15 @@ export const NewOrder = () => {
             isInvalid={errors.surname}
           />
           <Input
+            placeholder="E-mail"
+            {...register("email", { required: true })}
+            isInvalid={errors.email}
+          />
+          <Input
             type="number"
             placeholder="Idade"
             {...register("age", { required: true })}
             isInvalid={errors.age}
-          />
-          <Input
-            placeholder="Endereço"
-            {...register("address", { required: true })}
-            isInvalid={errors.address}
           />
         </VStack>
         <Box my={6} w="100%">

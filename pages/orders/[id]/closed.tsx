@@ -10,12 +10,10 @@ const ClosedOrderPage = () => {
   if (!isBrowser) return null;
   if (!isAuthenticated()) router.push("/");
 
-  console.log(router.query.id);
-
   return (
     <MainLayout>
       <Head>
-        <title>Nova ficha de emergência - HMV</title>
+        <title>Finalizar ficha de emergência - HMV</title>
         <meta name="description" content="Nova ficha - HMV" />
       </Head>
       closed

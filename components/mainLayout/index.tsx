@@ -39,7 +39,7 @@ export const MainLayout: FC = ({ children }) => {
             </Text>
           </Box>
           <Box p={4} marginLeft="auto" cursor="pointer" onClick={onLogout}>
-            <Text fontSize="14" textTransform="uppercase">
+            <Text fontSize="14" fontWeight="bold">
               Sair
             </Text>
           </Box>

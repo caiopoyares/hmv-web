@@ -1,4 +1,4 @@
-import { WarningIcon } from "@chakra-ui/icons";
+import { ArrowBackIcon, WarningIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
@@ -18,17 +18,37 @@ import {
   ModalBody,
   ModalCloseButton,
   Alert,
-  AlertIcon,
+  Spinner,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React, { FC, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useQuery } from "react-query";
+import api from "../../core/api";
+import { getAuthToken } from "../../helpers/auth";
 
 interface Props {
   orderId: string;
 }
 
-export const FinishOrder: FC<Props> = ({ orderId }) => {
+const useEmergencyOrder = (orderId: string) => {
+  return useQuery(
+    ["emergencyOrder", orderId],
+    async () => {
+      const { data } = await api.get(`/emergency-orders/${orderId}`, {
+        headers: {
+          authorization: getAuthToken() || "",
+        },
+      });
+      return data;
+    },
+    {
+      enabled: !!orderId,
+    }
+  );
+};
+
+export const OpenOrder: FC<Props> = ({ orderId }) => {
   const router = useRouter();
   const [showModal, setShowModal] = useState(false);
   const {
@@ -37,6 +57,8 @@ export const FinishOrder: FC<Props> = ({ orderId }) => {
     formState: { errors },
   } = useForm();
   const toast = useToast();
+
+  const { data: order, status } = useEmergencyOrder(router.query.id as string);
 
   const onSubmit = (data: any) => {
     console.log(data);
@@ -66,8 +88,22 @@ export const FinishOrder: FC<Props> = ({ orderId }) => {
     router.push("/dashboard");
   };
 
+  if (status === "loading") return <Spinner />;
+  if (status === "error") return <div>something went wrong</div>;
+
+  console.log(order);
+
   return (
-    <Container maxW={1200} mt={[8, 12]} mb={4}>
+    <Container maxW={1200} mt={8} mb={4}>
+      <Button
+        leftIcon={<ArrowBackIcon />}
+        mb={4}
+        onClick={() => router.back()}
+        variant="outline"
+        colorScheme="orange"
+      >
+        Voltar
+      </Button>
       <Box
         mb={8}
         border="1px solid"
@@ -80,7 +116,9 @@ export const FinishOrder: FC<Props> = ({ orderId }) => {
         </Heading>
         <Box display="flex">
           <Text mr={2}>Nome do paciente:</Text>
-          <Text color="gray.500">Caio Poyares</Text>
+          <Text color="gray.500">
+            {`${order.user.firstName} ${order.user.lastName}`}
+          </Text>
         </Box>
         <Box display="flex">
           <Text mr={2}>ID da ficha:</Text>
@@ -88,21 +126,23 @@ export const FinishOrder: FC<Props> = ({ orderId }) => {
         </Box>
         <Box display="flex">
           <Text mr={2}>Idade do paciente:</Text>
-          <Text color="gray.500">88</Text>
+          <Text color="gray.500">{order.user.age}</Text>
         </Box>
         <Box display="flex">
-          <Text mr={2}>Endereço:</Text>
-          <Text color="gray.500">Rua alguma coisa</Text>
+          <Text mr={2}>Motivo da emergência:</Text>
+          <Text color="gray.500">{order.reason}</Text>
         </Box>
         <Box display="flex">
-          <Text mr={2}>Motivo:</Text>
-          <Text color="gray.500">88</Text>
+          <Text mr={2}>Detalhes da emergência:</Text>
+          <Text color="gray.500">{order.description}</Text>
         </Box>
         <Box display="flex">
-          <Text mr={2}>Detalhes:</Text>
-          <Text color="gray.500">
-            Aconteceu algo assim e aconteceu desta maneira.
-          </Text>
+          <Text mr={2}>Hospital de entrada:</Text>
+          <Text color="gray.500">{order.hospital.name}</Text>
+        </Box>
+        <Box display="flex">
+          <Text mr={2}>Endereço do hospital:</Text>
+          <Text color="gray.500">{order.hospital.address}</Text>
         </Box>
       </Box>
       <Heading as="h4" size="lg">
@@ -139,10 +179,10 @@ export const FinishOrder: FC<Props> = ({ orderId }) => {
           <Box width="100%">
             <Checkbox
               size="md"
-              {...register("shouldCreateUser", { required: true })}
+              {...register("shouldSendToUser", { required: true })}
               defaultChecked
             >
-              Criar usuário ao finalizar?
+              Enviar por email o login ao paciente?
             </Checkbox>
           </Box>
         </VStack>
