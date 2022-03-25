@@ -93,7 +93,6 @@ export const OpenOrder: FC<Props> = ({ orderId }) => {
   }, [isError]);
 
   if (status === "loading") return <Loading />;
-  if (status === "error") return <div>something went wrong</div>;
   if (!doctors || !order) return null;
 
   return (

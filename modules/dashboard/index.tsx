@@ -1,6 +1,14 @@
 import { AddIcon } from "@chakra-ui/icons";
-import { Box, Container, Heading, Button, Divider } from "@chakra-ui/react";
+import {
+  Box,
+  Container,
+  Heading,
+  Button,
+  Divider,
+  useToast,
+} from "@chakra-ui/react";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
 import { Loading } from "../../components/Loading";
 import { ClosedOrders } from "../../components/orders/ClosedOrders";
 import { OpenOrders } from "../../components/orders/OpenOrders";
@@ -8,12 +16,23 @@ import { useEmergencyOrders } from "./hook";
 
 export const Dashboard = () => {
   const router = useRouter();
+  const toast = useToast();
 
-  const { data: orders, status } = useEmergencyOrders();
+  const { data: orders, status, isError } = useEmergencyOrders();
+
+  useEffect(() => {
+    if (isError) {
+      toast({
+        title: "Erro ao buscar fichas de emergência",
+        description: "Ocorreu um erro.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    }
+  }, [isError, toast]);
 
   if (status === "loading") return <Loading />;
-  if (status === "error") return <div>something went wrong</div>;
-
   return (
     <Container maxW={1200} mt={[4, 8]} mb={8}>
       <Box>

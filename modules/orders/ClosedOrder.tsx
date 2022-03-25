@@ -7,10 +7,11 @@ import {
   Text,
   VStack,
   Tag,
+  useToast,
 } from "@chakra-ui/react";
 import dayjs from "dayjs";
 import { useRouter } from "next/router";
-import React, { FC } from "react";
+import React, { FC, useEffect } from "react";
 import { useQuery } from "react-query";
 import { Loading } from "../../components/Loading";
 import api from "../../core/api";
@@ -39,11 +40,27 @@ const useEmergencyOrder = (orderId: string) => {
 
 export const ClosedOrder: FC<Props> = ({ orderId }) => {
   const router = useRouter();
+  const toast = useToast();
 
-  const { data: order, status } = useEmergencyOrder(router.query.id as string);
+  const {
+    data: order,
+    status,
+    isError,
+  } = useEmergencyOrder(router.query.id as string);
+
+  useEffect(() => {
+    if (isError) {
+      toast({
+        title: "Erro ao buscar ficha de emergência",
+        description: "Ocorreu um erro, tente novamente mais tarde.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    }
+  }, [isError, toast]);
 
   if (status === "loading") return <Loading />;
-  if (status === "error") return <div>something went wrong</div>;
   if (!order) return null;
 
   return (
