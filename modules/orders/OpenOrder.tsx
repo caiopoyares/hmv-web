@@ -10,7 +10,6 @@ import {
   useToast,
   Text,
   VStack,
-  Spinner,
   Tag,
   Select,
 } from "@chakra-ui/react";
@@ -18,7 +17,9 @@ import { useRouter } from "next/router";
 import React, { FC, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useQuery } from "react-query";
+import { Loading } from "../../components/Loading";
 import api from "../../core/api";
+import { parseDate } from "../../helpers";
 import { getAuthToken } from "../../helpers/auth";
 import { useDoctors, useFinishEmergencyOrder } from "./hook";
 
@@ -58,7 +59,10 @@ export const OpenOrder: FC<Props> = ({ orderId }) => {
     useFinishEmergencyOrder(orderId);
 
   const onSubmit = (data: any) => {
-    mutate(data);
+    mutate({
+      ...data,
+      finishDate: parseDate(data.finishDate),
+    });
   };
 
   useEffect(() => {
@@ -88,7 +92,7 @@ export const OpenOrder: FC<Props> = ({ orderId }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isError]);
 
-  if (status === "loading") return <Spinner />;
+  if (status === "loading") return <Loading />;
   if (status === "error") return <div>something went wrong</div>;
   if (!doctors || !order) return null;
 
@@ -159,13 +163,11 @@ export const OpenOrder: FC<Props> = ({ orderId }) => {
         <VStack mt={4} spacing={3}>
           <Input
             placeholder="Data de saída"
-            {...register("finishDate", { required: true })}
+            {...register("finishDate", {
+              required: true,
+              pattern: /^(0[1-9]|[12][\d]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/,
+            })}
             isInvalid={errors.finishDate}
-          />
-          <Input
-            placeholder="Horário de saída"
-            {...register("finishTime", { required: true })}
-            isInvalid={errors.finishTime}
           />
           <Input
             type="number"

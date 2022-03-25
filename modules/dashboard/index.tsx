@@ -1,6 +1,7 @@
 import { AddIcon } from "@chakra-ui/icons";
 import { Box, Container, Heading, Button, Divider } from "@chakra-ui/react";
 import { useRouter } from "next/router";
+import { Loading } from "../../components/Loading";
 import { ClosedOrders } from "../../components/orders/ClosedOrders";
 import { OpenOrders } from "../../components/orders/OpenOrders";
 import { useEmergencyOrders } from "./hook";
@@ -10,8 +11,7 @@ export const Dashboard = () => {
 
   const { data: orders, status } = useEmergencyOrders();
 
-  if (status === "loading") return <div>loading</div>;
-
+  if (status === "loading") return <Loading />;
   if (status === "error") return <div>something went wrong</div>;
 
   return (

@@ -14,6 +14,7 @@ import { useForm } from "react-hook-form";
 import { useRouter } from "next/router";
 import { ArrowBackIcon } from "@chakra-ui/icons";
 import { useCreateEmergencyOrder } from "./hook";
+import { parseDate } from "../../helpers";
 
 export const NewOrder = () => {
   const router = useRouter();
@@ -52,7 +53,10 @@ export const NewOrder = () => {
   }, [isError]);
 
   const onSubmit = async (data: any) => {
-    mutate(data);
+    mutate({
+      ...data,
+      arrivalDate: parseDate(data.arrivalDate),
+    });
   };
 
   return (
@@ -119,14 +123,12 @@ export const NewOrder = () => {
                 <option value="2">Canoas</option>
               </Select>
               <Input
-                placeholder="Data de entrada"
-                {...register("arrivalDate", { required: true })}
+                placeholder="Data de entrada (dd/mm/aaaa)"
+                {...register("arrivalDate", {
+                  required: true,
+                  pattern: /^(0[1-9]|[12][\d]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/,
+                })}
                 isInvalid={errors.arrivalDate}
-              />
-              <Input
-                placeholder="Horário de entrada"
-                {...register("arrivalTime", { required: true })}
-                isInvalid={errors.arrivalTime}
               />
               <Select
                 {...register("reason", { required: true })}

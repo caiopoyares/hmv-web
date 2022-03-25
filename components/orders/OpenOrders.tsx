@@ -7,6 +7,7 @@ import {
   Tag,
   Text,
 } from "@chakra-ui/react";
+import dayjs from "dayjs";
 import { useRouter } from "next/router";
 
 interface Props {
@@ -55,7 +56,9 @@ export const OpenOrders = ({ orders: allOrders }: Props) => {
               <Text mt={4} fontWeight="bold">
                 Ficha nº {order.id}
               </Text>
-              <Text color="gray.500">Criado em {order.arrivalDate}</Text>
+              <Text color="gray.500">
+                Criado em {dayjs(order.arrivalDate).format("DD/MM/YYYY")}
+              </Text>
               <Text mb={4} color="gray.500">
                 Hospital: {order.hospital.name}
               </Text>

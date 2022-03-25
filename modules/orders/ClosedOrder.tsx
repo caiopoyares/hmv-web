@@ -6,12 +6,13 @@ import {
   Heading,
   Text,
   VStack,
-  Spinner,
   Tag,
 } from "@chakra-ui/react";
+import dayjs from "dayjs";
 import { useRouter } from "next/router";
 import React, { FC } from "react";
 import { useQuery } from "react-query";
+import { Loading } from "../../components/Loading";
 import api from "../../core/api";
 import { getAuthToken } from "../../helpers/auth";
 
@@ -41,7 +42,7 @@ export const ClosedOrder: FC<Props> = ({ orderId }) => {
 
   const { data: order, status } = useEmergencyOrder(router.query.id as string);
 
-  if (status === "loading") return <Spinner />;
+  if (status === "loading") return <Loading />;
   if (status === "error") return <div>something went wrong</div>;
   if (!order) return null;
 
@@ -111,11 +112,15 @@ export const ClosedOrder: FC<Props> = ({ orderId }) => {
         </Box>
         <Box display="flex">
           <Text mr={2}>Data de entrada:</Text>
-          <Text color="gray.500">{order.arrivalDate}</Text>
+          <Text color="gray.500">
+            {dayjs(order.arrivalDate).format("DD/MM/YYYY")}
+          </Text>
         </Box>
         <Box display="flex">
           <Text mr={2}>Data de saída:</Text>
-          <Text color="gray.500">{order.finishDate}</Text>
+          <Text color="gray.500">
+            {dayjs(order.finishDate).format("DD/MM/YYYY")}
+          </Text>
         </Box>
         <Box display="flex">
           <Text mr={2}>Médico responsável:</Text>
