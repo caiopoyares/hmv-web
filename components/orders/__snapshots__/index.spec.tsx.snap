@@ -1,0 +1,49 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Orders should render empty closed orders 1`] = `
+<div
+  class="css-1necnyg"
+>
+  <p
+    class="chakra-text css-ax9bdp"
+  >
+    Nenhuma ficha encerrada.
+  </p>
+</div>
+`;
+
+exports[`Orders should render empty open orders 1`] = `
+<div
+  class="css-cjiru7"
+>
+  <p
+    class="chakra-text css-ax9bdp"
+  >
+    Nenhuma ficha em andamento.
+  </p>
+</div>
+`;
+
+exports[`Orders should render open orders 1`] = `
+<div
+  class="css-cjiru7"
+>
+  <p
+    class="chakra-text css-ax9bdp"
+  >
+    Nenhuma ficha em andamento.
+  </p>
+</div>
+`;
+
+exports[`Orders should render open orders 2`] = `
+<div
+  class="css-1necnyg"
+>
+  <p
+    class="chakra-text css-ax9bdp"
+  >
+    Nenhuma ficha encerrada.
+  </p>
+</div>
+`;

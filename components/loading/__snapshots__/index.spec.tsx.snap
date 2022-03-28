@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Loading should render default loading spinner 1`] = `
+<div
+  class="css-qh99lo"
+>
+  <div
+    class="chakra-spinner css-u4uvb9"
+  >
+    <span
+      class="css-f8n5zr"
+    >
+      Loading...
+    </span>
+  </div>
+</div>
+`;

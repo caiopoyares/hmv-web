@@ -12,6 +12,23 @@ export const useCreateEmergencyOrder = () => {
   );
 };
 
+export const useEmergencyOrder = (orderId: string) => {
+  return useQuery(
+    ["emergencyOrder", orderId],
+    async () => {
+      const { data } = await api.get(`/emergency-orders/${orderId}`, {
+        headers: {
+          authorization: getAuthToken() || "",
+        },
+      });
+      return data;
+    },
+    {
+      enabled: !!orderId,
+    }
+  );
+};
+
 export const useFinishEmergencyOrder = (orderId: string) => {
   return useMutation((payload: any) =>
     api.post(`/emergency-orders/${orderId}/finish`, payload, {

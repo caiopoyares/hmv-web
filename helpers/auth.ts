@@ -9,6 +9,7 @@ export const getAuthToken = (
     typeof window !== "undefined"
       ? document && document.cookie
       : (ctx && ctx.req && ctx.req.headers.cookie) || "";
+
   const { _jwt: jwtToken } = cookie.parse(stringfiedCookies);
 
   if (!jwtToken) return null;

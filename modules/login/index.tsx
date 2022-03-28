@@ -34,7 +34,7 @@ export const Login = () => {
 
   const { mutate, isLoading, error: loginError } = useLogin();
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: { [x: string]: any }) => {
     const payload = {
       cpf: data.cpf.replace(/\D/g, ""),
       password: data.password,

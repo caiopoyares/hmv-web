@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PasswordInput should render default 1`] = `
+<div
+  class="chakra-input__group css-4302v8"
+>
+  <input
+    class="chakra-input css-1n0hj84"
+    placeholder="senha"
+    test-id="password-input"
+    type="password"
+  />
+  <div
+    class="chakra-input__right-element css-7xoowg"
+  >
+    <button
+      class="chakra-button css-13fla2j"
+      test-id="show-btn"
+      type="button"
+    >
+      Ver
+    </button>
+  </div>
+</div>
+`;

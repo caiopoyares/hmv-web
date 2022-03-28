@@ -17,10 +17,11 @@ import { useRouter } from "next/router";
 import React, { FC, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useQuery } from "react-query";
-import { Loading } from "../../components/Loading";
+import { Loading } from "../../components/loading/Loading";
 import api from "../../core/api";
 import { parseDate } from "../../helpers";
 import { getAuthToken } from "../../helpers/auth";
+import { Doctor } from "../../types";
 import { useDoctors, useFinishEmergencyOrder } from "./hook";
 
 interface Props {
@@ -58,7 +59,7 @@ export const OpenOrder: FC<Props> = ({ orderId }) => {
   const { mutate, isLoading, isSuccess, isError } =
     useFinishEmergencyOrder(orderId);
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: { [x: string]: any }) => {
     mutate({
       ...data,
       finishDate: parseDate(data.finishDate),
@@ -179,7 +180,7 @@ export const OpenOrder: FC<Props> = ({ orderId }) => {
             placeholder="Selecione o médico responsável"
             isInvalid={errors.doctorId}
           >
-            {doctors.map((doctor: any) => (
+            {doctors.map((doctor: Doctor) => (
               <option
                 key={doctor.id}
                 value={doctor.id}

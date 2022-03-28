@@ -9,9 +9,10 @@ import {
 } from "@chakra-ui/react";
 import dayjs from "dayjs";
 import { useRouter } from "next/router";
+import { Order } from "../../types";
 
 interface Props {
-  orders: any[];
+  orders: Order[];
 }
 
 export const OpenOrders = ({ orders: allOrders }: Props) => {
@@ -30,7 +31,7 @@ export const OpenOrders = ({ orders: allOrders }: Props) => {
         </>
       ) : (
         <>
-          {openOrders.map((order: any) => (
+          {openOrders.map((order: Order) => (
             <LinkBox
               key={order.id}
               as="article"

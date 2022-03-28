@@ -52,7 +52,7 @@ export const NewOrder = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isError]);
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: { [x: string]: any }) => {
     mutate({
       ...data,
       arrivalDate: parseDate(data.arrivalDate),

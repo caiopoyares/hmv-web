@@ -12,31 +12,12 @@ import {
 import dayjs from "dayjs";
 import { useRouter } from "next/router";
 import React, { FC, useEffect } from "react";
-import { useQuery } from "react-query";
-import { Loading } from "../../components/Loading";
-import api from "../../core/api";
-import { getAuthToken } from "../../helpers/auth";
+import { Loading } from "../../components/loading/Loading";
+import { useEmergencyOrder } from "./hook";
 
 interface Props {
   orderId: string;
 }
-
-const useEmergencyOrder = (orderId: string) => {
-  return useQuery(
-    ["emergencyOrder", orderId],
-    async () => {
-      const { data } = await api.get(`/emergency-orders/${orderId}`, {
-        headers: {
-          authorization: getAuthToken() || "",
-        },
-      });
-      return data;
-    },
-    {
-      enabled: !!orderId,
-    }
-  );
-};
 
 export const ClosedOrder: FC<Props> = ({ orderId }) => {
   const router = useRouter();
